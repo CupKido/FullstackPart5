@@ -1,10 +1,11 @@
 import { useState } from 'react'
 
-function Task({ title, completed }) {
+function Task({ title, completed, taskId, onCompletedChange }) {
 
     return (
       <> 
-        <p>{title}. {completed ? "Done" : ""}</p>
+        <input type="checkbox" checked={completed} onChange={() => {onCompletedChange(taskId)}} />
+        <p>{title}. {completed}</p>
       </>
     )
   }
