@@ -1,6 +1,6 @@
 import Login from './Login'
 import Todos from './Todos'
-import Posts from './Posts'
+import Posts from './posts/Posts'
 import Albums from './Albums'
 import './App.css'
 import {BrowserRouter, Route, Routes } from 'react-router-dom'
