@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Comment from './Comment';
+import { Link } from "react-router-dom";
 
 
 function Post({post, index}){
@@ -21,15 +22,14 @@ function Post({post, index}){
         }
     }, [showComments])
 
-    function handleShowComments(){
-        setShowComments(prevVal => !prevVal);
-    }
-
     return (
-        <div>
+        <div style={extend? {borderStyle: "solid", borderColor: "red"}: {}}>
+            {/* TODO: deednt fully understand the porpse of the fiture */}
+            <button onClick={() => setExtend((prevVal)=>!prevVal)}>extend</button>
+            
             <h2>{post.title}</h2>
             <p>{post.body}</p>
-            <button onClick={handleShowComments}>
+            <button onClick={()=>setShowComments(prevVal => !prevVal)}>
                 {showComments? "hide comments": "comments"}
             </button>
 
