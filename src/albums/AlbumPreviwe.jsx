@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function AlbumPreviwe({id, title, display}){
-    const nPreviewPhotos = 4
-    const [coverPhoto, setCoverPhoto] = useState([])
+const style = {
+    color: 'black', 
+    textDecoration: 'none', 
+    borderStyle: 'solid', 
+    borderColor: 'black',
+    margin: 10,
+    backgroundColor: 'gray',
+};
+
+function AlbumPreviwe({album, display}){
+    const nPreviewPhotos = 6
+    const [coverPhotos, setCoverPhotos] = useState(false)
     useEffect(() => {
         if (display){
-            async function getCoverPhoto(){ 
-                fetch('https://jsonplaceholder.typicode.com/photos?albumId=' + id)
+            async function getCoverPhotos(){ 
+                fetch('https://jsonplaceholder.typicode.com/photos?albumId=' + album.id)
                     .then(res => res.json())
-                    .then(p => setCoverPhoto(p[0]))
+                    .then(p => setCoverPhotos(p.slice(0, nPreviewPhotos)))
             }
     
-            getCoverPhoto();
+            getCoverPhotos();
         }
     }, [display])
 
     return (
-        <Link to={'./'+id}>
-            <h1>{title}</h1>
-            <img src={coverPhoto.thumbnailUrl} alt={title}/>
-        </Link>
+        <div style={style}>
+            <h1 style={{width: '50%',backgroundColor: 'purple', textDecoration: 'none', textAlign: 'center'}}>{album.title}</h1>
+            <Link to={'./'+album.id} >
+                <div style={{borderStyle: 'solid', borderWidth: 5, borderColor: 'blue'}}>
+                    {coverPhotos
+                    ?coverPhotos.map((p, index) => <img key={index} src={p.thumbnailUrl}/>)
+                    :<h1>Loading...</h1>}
+                </div>
+            </Link>
+        </div>
     )
 }
 

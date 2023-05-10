@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 import AlbumLayaout from './AlbumLayout';
 import AlbumPreviwe from './AlbumPreviwe';
+import { useUser } from '../UserContext';
 function Albums() {
-
+  const user = useUser();
   const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
     async function getAlbums(){
-      //TODO: userId =?
-      const userId=3;
-      fetch('https://jsonplaceholder.typicode.com/albums?userId=' + userId)
+      fetch('https://jsonplaceholder.typicode.com/albums?userId=' + user.id)
         .then(respond => respond.json())
         .then(newAlboms => setAlbums(newAlboms));
     }
@@ -20,7 +19,10 @@ function Albums() {
 
   return (
     <div>   
-      {albums.map((album, index)=> <AlbumPreviwe key={index} {...album}/>)}
+      {albums.map((album, index)=>
+
+      <AlbumPreviwe key={index} album={album} display={true}/>)
+      }
     </div>
   )
 }

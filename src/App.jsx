@@ -1,7 +1,7 @@
 import Login from './Login'
 import Todos from './Todos'
 import Posts from './posts/Posts'
-import Albums from './albums/Albums'
+import AlbumRoutes from './albums/AlbumsRoutes'
 import './App.css'
 import {BrowserRouter, Route, Routes, NavLink, redirect } from 'react-router-dom'
 import UserProvider from './UserContext'
@@ -32,7 +32,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/Todos" element={<Todos />} />
           <Route path="/Posts" element={<Posts />} />
-          <Route path="/Album" element={<Albums />} />
+          <Route path="/Album/*" element={<AlbumRoutes />} />
         </Routes>
       </BrowserRouter>
     </UserProvider>
