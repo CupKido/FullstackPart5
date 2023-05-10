@@ -6,7 +6,7 @@ function AlbumPreviwe({id, title, display}){
     const [coverPhoto, setCoverPhoto] = useState([])
     useEffect(() => {
         if (display){
-            async function getCoverPhoto(){
+            async function getCoverPhoto(){ 
                 fetch('https://jsonplaceholder.typicode.com/photos?albumId=' + id)
                     .then(res => res.json())
                     .then(p => setCoverPhoto(p[0]))
