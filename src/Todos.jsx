@@ -1,10 +1,11 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import Task from './task'
 import './Todos.css'
+import { useUser } from './UserContext'
 
 let user = {}
 function Todos() {
-    const [userId, setUserId] = useState(0)
+    const user = useUser()
     const [task_title, setTitle] = useState('')
     let task_id = useMemo(() => 0, [])
     const [sortMethod, setSortMethod] = useState('serial') // serial, alphabetic, completed, random
@@ -29,8 +30,8 @@ function Todos() {
     // initial fetch for tasks
     useEffect(() => {
       console.log("useEffect Todos")
-      user = JSON.parse(localStorage.getItem('user'))
-      setUserId(user.id)
+      console.log(user)
+      // user = JSON.parse(localStorage.getItem('user'))
       async function getTasks() {
         fetch('https://jsonplaceholder.typicode.com/todos?userId=' + user.id)
         .then(response => response.json())
