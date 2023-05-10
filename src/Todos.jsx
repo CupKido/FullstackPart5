@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import Task from './task'
+import './Todos.css'
+
 let user = {}
 function Todos() {
     const [userId, setUserId] = useState(0)
@@ -9,7 +11,19 @@ function Todos() {
     const [Tasks, setTasks] = useState([])
     function addTask() {
         console.log(task_title)
-        setTasks([...Tasks, { title: task_title, completed: false, task_id: Tasks.length + 1 }])
+        let id = -1
+        for(let i = 0; i < Tasks.length; i++){
+          if(Tasks[i].task_id > id){
+            id = Tasks[i].task_id
+          }
+        }
+
+        const tasks= [...Tasks, { title: task_title, completed: false, task_id: id + 1 }]
+        if(sortMethod === 'completed'){
+          setTasks(sortTasks(tasks))
+        }else{
+          setTasks(tasks)
+        }
     }
     
     // initial fetch for tasks
@@ -80,23 +94,23 @@ function Todos() {
         <Task key={index} title={task.title} completed={task.completed} taskId={task.id} onCompletedChange={HadleCompleteTask}  />
     ));
     }
-
     return (
-      <> 
-        <label >Add Task</label>
-        <input type="text" id="taskTitle" onChange={(e) => setTitle(e.target.value)} />\
-        <button onClick={addTask}>Add</button>
-        <select id="sotedBy" onChange={(e) => setSortMethod(e.target.value)}>
-          <option value="serial">Serial</option>
-          <option value="alphabetic">Alphabetic</option>
-          <option value="completed">Completed</option>
-          <option value="random">Random</option>
-        </select>
-        {
-          getTasksElements()
-        }
-      </>
-    )
+      <div className="todo-container">
+        <div className="todo-controls">
+          <label className="todo-label">Add Task: </label>
+          <input className="todo-input" type="text" id="taskTitle" onChange={(e) => setTitle(e.target.value)} />
+          <button className="todo-button" onClick={addTask}>Add</button>
+          <select className="todo-select" id="sotedBy" onChange={(e) => setSortMethod(e.target.value)}>
+            <option value="serial">Serial</option>
+            <option value="alphabetic">Alphabetic</option>
+            <option value="completed">Completed</option>
+            <option value="random">Random</option>
+          </select>
+        </div>
+        {getTasksElements()}
+      </div>
+    );
+    
   }
 
   export default Todos
