@@ -3,20 +3,39 @@ import Todos from './Todos'
 import Posts from './posts/Posts'
 import Albums from './albums/Albums'
 import './App.css'
-import {BrowserRouter, Route, Routes } from 'react-router-dom'
-import AlbumsRoutes from './albums/AlbumsRoutes'
+import {BrowserRouter, Route, Routes, NavLink, redirect } from 'react-router-dom'
+import UserProvider from './UserContext'
 
 function App() {
-
+  
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Todos" element={<Todos />} />
-        <Route path="/Posts" element={<Posts />} />
-        <Route path="/Albums/*" element={<AlbumsRoutes />} />
-      </Routes>
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
+        <nav>
+          <ul className="navbar">
+            <li>
+              <NavLink to="/login" activeClassName="active">Login</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Todos" activeClassName="active">Todos</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Posts" activeClassName="active">Posts</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Album" activeClassName="active">Album</NavLink>
+            </li>
+          </ul>
+        </nav>
+        <Routes>
+        <Route path="/" element={<redirect to="/login" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/Todos" element={<Todos />} />
+          <Route path="/Posts" element={<Posts />} />
+          <Route path="/Album" element={<Albums />} />
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   )
 }
 
