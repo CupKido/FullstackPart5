@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import Task from './task'
-import './Todos.css'
-import { useUser } from './UserContext'
+import '../../styles/Todos.css'
+import { useUser } from '../../UserContext'
 
 let user = {}
 function Todos() {
@@ -10,42 +10,29 @@ function Todos() {
     let task_id = useMemo(() => 0, [])
     const [sortMethod, setSortMethod] = useState('serial') // serial, alphabetic, completed, random
     const [Tasks, setTasks] = useState([])
-    function addTask() {
-        console.log(task_title)
-        let id = -1
-        for(let i = 0; i < Tasks.length; i++){
-          if(Tasks[i].task_id > id){
-            id = Tasks[i].task_id
-          }
-        }
+    const inputRef = useRef(null);
 
-        const tasks= [...Tasks, { title: task_title, completed: false, task_id: id + 1 }]
-        if(sortMethod === 'completed'){
-          setTasks(sortTasks(tasks))
-        }else{
-          setTasks(tasks)
-        }
+    async function getTasks(callback) {
+      fetch('https://jsonplaceholder.typicode.com/todos?userId=' + user.id)
+      .then(response => response.json())
+      .then(json => callback(json));
     }
     
     // initial fetch for tasks
     useEffect(() => {
-      console.log("useEffect Todos")
-      console.log(user)
       // user = JSON.parse(localStorage.getItem('user'))
-      async function getTasks() {
-        fetch('https://jsonplaceholder.typicode.com/todos?userId=' + user.id)
-        .then(response => response.json())
-        .then(json => setTasks(json));
-      }
+      
   
-      getTasks();
+      getTasks((json)=>{
+        setTasks(json)
+      });
     }, []);
 
 
     const previousSortMethodRef = useRef(sortMethod);
     // sort tasks by sortMethod when sortMethod changes
+
     useEffect(() => {
-      console.log("useEffect sortMethod")
       if (previousSortMethodRef.current !== sortMethod) {
         previousSortMethodRef.current = sortMethod;
       } else {
@@ -54,21 +41,58 @@ function Todos() {
       setTasks(sortTasks(Tasks));
     }, [sortMethod]);
 
-    function HadleCompleteTask(task_id){
-      console.log("Task ID: ", task_id)
-      let tasks = Tasks.map((task) => {
-        if(task.id === task_id){
-          console.log("from " + task.completed + " to " + !task.completed)
-          task.completed = !task.completed
+
+    function addTask() {
+      let id = -1
+      for(let i = 0; i < Tasks.length; i++){
+        if(Tasks[i].id > id){
+          id = Tasks[i].id
         }
-        return task
-      })
-      if(sortMethod === 'completed'){
+      }
+      console.log("id: ", id)
+      const tasks= [...Tasks, { title: task_title, completed: false, id: id + 1 }]
+      inputRef.current.value = '';
+
+      updateTasks(tasks)
+    }
+
+    function updateTasks(tasks){
+      if(sortMethod === 'completed' || sortMethod === 'alphabetic'){
         setTasks(sortTasks(tasks))
       }else{
         setTasks(tasks)
       }
     }
+
+
+    function HadleCompleteTask(task_id){
+      let tasks = Tasks.map((task) => {
+        if(task.id === task_id){
+          task.completed = !task.completed
+          fetch('https://jsonplaceholder.typicode.com/todos/' + task_id, {
+            method: 'PUT',
+            body: JSON.stringify({
+              id: task_id,
+              completed: task.completed
+            }),
+            headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+            },
+          }).then((response) => response.json())
+          .then((json) => console.log(json.completed === task.completed ? 'success' : 'fail'))
+        }
+        return task
+      })
+
+      updateTasks(tasks)
+    }
+
+    function HadleDeleteTask(task_id){
+      let tasks = Tasks.filter((task) => task.id !== task_id)
+      updateTasks(tasks)
+    }
+
+
 
     function sortTasks(tasks){
       let sortedTasks = [...tasks];
@@ -88,18 +112,19 @@ function Todos() {
       return sortedTasks
     }
 
+
     function getTasksElements()
     {
-      console.log("getTasksElements")
       return Tasks.map((task, index) => (
-        <Task key={index} title={task.title} completed={task.completed} taskId={task.id} onCompletedChange={HadleCompleteTask}  />
+        <Task key={index} title={task.title} completed={task.completed} taskId={task.id} onCompletedChange={HadleCompleteTask} onDelete={HadleDeleteTask} />
     ));
     }
+
     return (
       <div className="todo-container">
         <div className="todo-controls">
           <label className="todo-label">Add Task: </label>
-          <input className="todo-input" type="text" id="taskTitle" onChange={(e) => setTitle(e.target.value)} />
+          <input className="todo-input" type="text" id="taskTitle" ref={inputRef} onChange={(e) => setTitle(e.target.value)} />
           <button className="todo-button" onClick={addTask}>Add</button>
           <select className="todo-select" id="sotedBy" onChange={(e) => setSortMethod(e.target.value)}>
             <option value="serial">Serial</option>

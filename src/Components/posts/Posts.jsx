@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import Post from './Post';
-import { useUser } from '../UserContext';
+import { useUser } from '../../UserContext';
 
 function Posts() {
   

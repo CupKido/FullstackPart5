@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 import AlbumLayaout from './AlbumLayout';
 import AlbumPreviwe from './AlbumPreviwe';
-import { useUser } from '../UserContext';
+import { useUser } from '../../UserContext';
 function Albums() {
   const user = useUser();
   const [albums, setAlbums] = useState([]);
