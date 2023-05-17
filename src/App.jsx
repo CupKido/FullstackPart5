@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react'
 import './styles/App.css'
 import {BrowserRouter, Route, Routes, NavLink, Navigate } from 'react-router-dom'
 import UserProvider from './UserContext'
+import AlbumsRoutes from './Components/albums/AlbumsRoutes'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -62,7 +63,7 @@ function App() {
           <Route path="/login" element={<Login onLogIn={handleLogin} isLoggedIn={isLoggedIn} />} />
           <Route path="/Todos" element={ isLoggedIn ? <Todos /> : <Navigate to="/login" />} />
           <Route path="/Posts" element={ isLoggedIn ?<Posts /> : <Navigate to="/login" />} />
-          <Route path="/Album" element={ isLoggedIn ? <Albums /> : <Navigate to="/login" />} />
+          <Route path="/Album*" element={ isLoggedIn ? <AlbumsRoutes /> : <Navigate to="/login" />} />
           <Route path="/UserInfo" element={ isLoggedIn ? <UserInfo /> : <Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>

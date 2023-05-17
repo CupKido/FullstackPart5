@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Comment from './Comment';
-import { Link } from "react-router-dom";
 
 
-function Post({post, index}){
+function Post({post}){
     const [extend, setExtend] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState([]);
@@ -23,8 +22,8 @@ function Post({post, index}){
     }, [showComments])
 
     return (
-        <div style={extend? {borderStyle: "solid", borderColor: "red"}: {}}>
-            {/* TODO: deednt fully understand the porpse of the fiture */}
+        <div style={extend? {fontWeight: "bold", borderStyle: "solid", borderColor: "red"}: {}}>
+
             <button onClick={() => setExtend((prevVal)=>!prevVal)}>extend</button>
             
             <h2>{post.title}</h2>

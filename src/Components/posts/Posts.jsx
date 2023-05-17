@@ -24,7 +24,7 @@ function Posts() {
   return (
     <>
       {posts.map((post, index) =>
-          <div>
+          <div key={index}>
             <Post id={index} post={post}/>
             <hr style={{height: 5, backgroundColor: 'black'}}/>
           </div>
